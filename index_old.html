@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segmentation d'une image</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Segmentation d'une image</h1>
+    <form id="segmentForm" method="post" enctype="multipart/form-data">
+        <select name="image" required onchange="loadOriginalImage(event)">
+            <option value="" disabled selected>Choisir une image</option>
+            {% for image_file in image_files %}
+            <option value="{{ image_file }}">{{ image_file }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" onclick="segmentImage()">Segmentation</button>
+    </form>
+    <div class="image-container">
+        <div class="image-column">
+            <h2>Image Originale</h2>
+            <img id="original_image" src="" alt="Image Originale">
+        </div>
+        <div class="image-column">
+            <h2>Mask prédit</h2>
+            <img id="segmented_image" src="" alt="Mask prédit">
+        </div>
+    </div>
+    <div class="image-column">
+        <h2>Mask Originale</h2>
+        <img id="mask_image" src="" alt="Mask Oeiginale">
+    </div>
+
+    <script>
+
+        function loadOriginalImage(event) {
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('original_image').src = e.target.result;
+
+                    // Récupérer le masque originale
+                    var fileName = input.files[0].name; // Nom du fichier
+
+                     // Charger le masque correspondant depuis Flask
+                    document.getElementById('mask_image').src = '/datas/masks/test_clean/' + fileName;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function copyImageSize(sourceImageId, targetImageId) {
+            var sourceImage = document.getElementById(sourceImageId);
+            var targetImage = document.getElementById(targetImageId);
+            targetImage.style.width = sourceImage.width + 'px';
+            targetImage.style.height = sourceImage.height + 'px';
+        }
+
+        function segmentImage() {
+            var form = document.getElementById('segmentForm');
+            var formData = new FormData(form);
+    
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/segment_image');
+            xhr.responseType = 'blob'; // Indiquer que nous attendons des données binaires
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var blob = xhr.response;
+                    var url = URL.createObjectURL(blob); // Créer une URL à partir des données binaires
+                    document.getElementById('segmented_image').src = url; // Définir l'URL de l'image
+                    copyImageSize('original_image', 'segmented_image');
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
+</body>
+</html>

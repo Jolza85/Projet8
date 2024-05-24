@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segmentation d'une image</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Segmentation d'une image</h1>
+    <form id="segmentForm" method="post" enctype="multipart/form-data">
+        <select id="imageSelect" name="image" required onchange="loadOriginalImage(event)">
+            <option value="" disabled selected>Choisir une image</option>
+            {% for image_file in image_files %}
+            <option value="{{ image_file }}">{{ image_file }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" onclick="segmentImage()">Segmentation</button>
+    </form>
+    <div class="image-container">
+        <div class="image-column">
+            <h2>Image Originale</h2>
+            <img id="original_image" src="" alt="Image Originale">
+        </div>
+        <div class="image-column">
+            <h2>Mask prédit</h2>
+            <img id="segmented_image" src="" alt="Mask prédit">
+        </div>
+    </div>
+    <div class="image-column">
+        <h2>Mask Originale</h2>
+        <img id="mask_image" src="" alt="Mask Oeiginale">
+    </div>
+
+    <script>
+
+        function loadOriginalImage() {
+            var selectedImage = document.getElementById('imageSelect').value;
+            document.getElementById('original_image').src = '/static/images/' + selectedImage;
+            document.getElementById('mask_image').src = '/datas/masks/test_clean/' + selectedImage;
+        }
+
+        function copyImageSize(sourceImageId, targetImageId) {
+            var sourceImage = document.getElementById(sourceImageId);
+            var targetImage = document.getElementById(targetImageId);
+            targetImage.style.width = sourceImage.width + 'px';
+            targetImage.style.height = sourceImage.height + 'px';
+        }
+
+        function segmentImage() {
+            var selectedImage = document.getElementById('imageSelect').value;
+            var formData = new FormData();
+            formData.append('image', selectedImage);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/segment_image');
+            xhr.responseType = 'arraybuffer';  // Indique que nous attendons un arraybuffer en réponse
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        var arrayBuffer = xhr.response;
+                        var blob = new Blob([arrayBuffer], { type: 'image/png' });
+                        var url = URL.createObjectURL(blob);
+                        document.getElementById('segmented_image').src = url;
+                        copyImageSize('original_image', 'segmented_image');
+                    } else {
+                        console.error('Error processing image:', xhr.status);
+                    }
+                }
+            };
+            xhr.send(formData);
+        }
+    </script>
+</body>
+</html>

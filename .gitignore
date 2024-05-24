@@ -1,0 +1,8 @@
+tmp/
+logs/
+datas/
+dilated.h5
+vgg16.h5
+temp_image.png
+__pycache__/
+.ipynb_checkpoints/

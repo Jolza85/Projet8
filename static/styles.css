@@ -1,0 +1,78 @@
+/* styles.css */
+
+/* Style pour le corps de la page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* Style pour le titre */
+h1 {
+    color: #007bff;
+    text-align: center;
+}
+
+h2 {
+    color: #3e9edd;
+}
+
+/* Style pour le formulaire */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Style pour le bouton */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Style pour la section de l'image segmentée */
+.segmented-image-section {
+    margin-top: 40px;
+    text-align: center;
+}
+
+/* Style pour la mise en page en deux colonnes */
+.image-container {
+    display: flex;
+}
+
+/* Style pour chaque colonne d'image */
+.image-column {
+    flex: 1; /* Chaque colonne prendra la moitié de l'espace disponible */
+    text-align: center; /* Centre le contenu à l'intérieur de chaque colonne */
+    padding: 20px; /* Ajoute un peu d'espace autour des images */
+}
+
+/* Style pour les images à l'intérieur des colonnes */
+.image-column img {
+    max-width: 100%; /* La largeur maximale de chaque image est de 100% */
+    height: auto; /* La hauteur s'ajustera automatiquement pour maintenir les proportions */
+}
+
+/* Style pour l'image segmentée */
+#segmented_image {
+    width: 100%;
+    height: 50%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour l'image originale */
+#original_image {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

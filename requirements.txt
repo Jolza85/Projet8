@@ -1,0 +1,15 @@
+fastapi
+jupyter
+keras==2.10.0
+keras-segmentation
+matplotlib
+opencv-python
+numpy
+pandas
+scipy==1.10.1
+seaborn
+tensorflow-cpu==2.10.0
+uvicorn==0.24.0.post1
+flask
+python-multipart
+gunicorn
